@@ -1,0 +1,14 @@
+<header class="fixed top-0 left-0 w-full bg-gray-800 shadow-md z-50">
+    <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+      <!-- Logo -->
+      <h1 class="text-2xl font-extrabold text-yellow-400">
+        <a href="#" aria-label="Kollywood.io Home">{{ logoText }}</a>
+      </h1>
+  
+      <!-- Navigation Links -->
+      <nav-list-items [items]="navItems"></nav-list-items>
+  
+      <!-- Profile Section -->
+      <profile [profileOptions]="profileOptions"></profile>
+    </nav>
+  </header>
