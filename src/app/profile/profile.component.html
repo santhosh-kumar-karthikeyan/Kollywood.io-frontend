@@ -1,0 +1,16 @@
+<div class="relative">
+    <!-- Profile Icon -->
+    <button id="profile-menu-button" class="flex items-center gap-2 text-gray-300 hover:text-yellow-400 transition">
+      <img src="favicon.ico" alt="Profile Picture" class="w-8 h-8 rounded-full border-2 border-yellow-400">
+      <span>Profile</span>
+    </button>
+  
+    <!-- Dropdown Menu -->
+    <div id="profile-menu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg">
+      <ul class="py-2">
+        <li *ngFor="let option of profileOptions">
+          <a [href]="option.link" class="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-yellow-400">{{ option.text }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
