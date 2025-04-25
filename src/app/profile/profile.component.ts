@@ -7,11 +7,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
-  @Input() profileOptions: {text: string, link: string}[] = [{
-    text : "Dashboard", link: "http://localhost:3000/"
-    },
-    {
-      text: "Logout" , link: "http://localhost:3000/"
-    }
-  ];
+  @Input() profileOptions: {text: string, link: string}[] = [];
 }
