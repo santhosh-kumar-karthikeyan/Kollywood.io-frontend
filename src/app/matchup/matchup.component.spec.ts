@@ -1,0 +1,23 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { MatchupComponent } from './matchup.component';
+
+describe('MatchupComponent', () => {
+  let component: MatchupComponent;
+  let fixture: ComponentFixture<MatchupComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [MatchupComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(MatchupComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

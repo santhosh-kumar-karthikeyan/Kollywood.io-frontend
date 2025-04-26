@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JWTInterceptorService } from './services/Interceptors/jwtinterceptor.service';
+import { MatchupComponent } from './matchup/matchup.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { JWTInterceptorService } from './services/Interceptors/jwtinterceptor.se
     ProfileComponent,
     LoginComponent,
     HomeComponent,
-    SignupComponent
+    SignupComponent,
+    MatchupComponent
   ],
   imports: [
     BrowserModule,
