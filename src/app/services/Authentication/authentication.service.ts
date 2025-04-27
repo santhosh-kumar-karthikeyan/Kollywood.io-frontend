@@ -16,6 +16,7 @@ export class AuthenticationService {
   login(credentials : { username: string, password: string}) {
     return this.http.post<{token: string, message: string}>(this.loginUrl,credentials).pipe(
       tap(response => {
+        console.log("New token recieved: " + response.token);
         localStorage.setItem('jwt',response.token);
       })
     );
@@ -44,6 +45,7 @@ export class AuthenticationService {
       return false;
     const payload = JSON.parse(atob(token.split('.')[1]));
     const currentTime = Math.floor(Date.now() / 1000);
+    console.log("Token expired?: ", payload.exp <= currentTime);
     return payload.exp > currentTime;
   }
 }
