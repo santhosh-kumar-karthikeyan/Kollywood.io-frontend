@@ -9,8 +9,9 @@ import { AuthenticationService } from '../services/Authentication/authentication
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit{
+  showLoginModal: boolean;
   constructor(private auth: AuthenticationService, private socket: GameService, private router: Router) {
-
+    this.showLoginModal = false;
   }
   ngOnInit(): void {
   }
@@ -18,7 +19,9 @@ export class HomeComponent implements OnInit{
   startGame() {
     if(!this.auth.isLoggedIn()) {
       console.log("Not logged in");
-      this.router.navigate(["/login"]);
+      this.showLoginModal = true;
+      // this.router.navigate(["/login"]);
+      return;
     }
     const token = localStorage.getItem('jwt');
     const payload: string | undefined = token?.split('.')[1];
@@ -37,5 +40,12 @@ export class HomeComponent implements OnInit{
           });
       });
     }
+  }
+  navigateToLogin(): void {
+    this.showLoginModal = true;
+    this.router.navigate(['/login']);
+  }
+  closeModal(): void {
+    this.showLoginModal = false;
   }
 }
