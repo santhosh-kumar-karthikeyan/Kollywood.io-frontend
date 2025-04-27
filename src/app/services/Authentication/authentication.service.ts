@@ -39,6 +39,11 @@ export class AuthenticationService {
 
   isLoggedIn(): boolean {
     console.log(this.getToken());
-    return !!this.getToken();
+    const token = this.getToken();
+    if(!token)
+      return false;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp > currentTime;
   }
 }
