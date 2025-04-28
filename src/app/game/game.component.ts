@@ -4,6 +4,7 @@ import { GameService } from '../services/GameSockets/socket.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CanComponentDeactivate } from '../guards/can-deactivate.guard';
+import { AuthenticationService } from '../services/Authentication/authentication.service';
 
 @Component({
   selector: 'app-game',
@@ -23,7 +24,7 @@ export class GameComponent implements OnInit,OnDestroy,CanComponentDeactivate {
   myRemaining: number = 0;
   oppRemaining: number = 0;
 
-  constructor(private route: ActivatedRoute, private gameService: GameService) {}
+  constructor(private route: ActivatedRoute, private gameService: GameService,private auth: AuthenticationService) {}
   ngOnDestroy(): void {
     
   }
@@ -32,17 +33,18 @@ export class GameComponent implements OnInit,OnDestroy,CanComponentDeactivate {
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
     console.log("RoomCode: "+this.roomCode);
     if (this.roomCode) {
-      this.fetchMovieClue(this.roomCode);
+      console.log("Going to fetch the movie");
+      this.fetchMovieClue(this.roomCode, this.auth.getUsername());
     }
   }
 
-  fetchMovieClue(roomCode: string): void {
-    this.gameService.getMovieClue(roomCode).subscribe((clue) => {
+  fetchMovieClue(roomCode: string,playerName: string): void {
+    this.gameService.getMovieClue(roomCode,playerName).subscribe((clue) => {
       console.log("Clue" + clue);
-      this.movieNameInitial = clue.movieNameInitial;
-      this.heroNameInitial = clue.heroNameInitial;
-      this.heroineNameInitial = clue.heroineNameInitial;
-      this.songNameInitial = clue.songNameInitial;
+      this.movieNameInitial = clue[0];
+      this.heroNameInitial = clue[1];
+      this.heroineNameInitial = clue[2];
+      this.songNameInitial = clue[3];
     });
   }
 

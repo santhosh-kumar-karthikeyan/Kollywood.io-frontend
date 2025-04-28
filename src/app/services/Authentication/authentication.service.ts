@@ -42,7 +42,9 @@ export class AuthenticationService {
     if(!token)
       return "";
     const payload = JSON.parse(atob(token.split('.')[1]));
+    console.log(payload);
     const username = payload.username;
+    console.log(username);
     return username;
   }
   isLoggedIn(): boolean {

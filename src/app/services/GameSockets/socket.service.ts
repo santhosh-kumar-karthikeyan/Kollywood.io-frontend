@@ -102,9 +102,9 @@ export class GameService {
     this.disconnectSocket();
     console.log('Game state cleared.');
   }
-  getMovieClue(roomCode: string): Observable<any> {
+  getMovieClue(roomCode: string, playerName: string): Observable<any> {
     return new Observable((observer) => {
-      this.socket?.emit('getMovie', { roomCode }, (clue: any) => {
+      this.socket?.emit('getMovie', { roomCode,playerName }, (clue: any) => {
         console.log("getMovie emitted for " + roomCode);
         observer.next(clue);
         console.log("clue acquired: " + clue);
