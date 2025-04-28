@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameService } from '../services/GameSockets/socket.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/Authentication/authentication.service';
@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit{
   constructor(private auth: AuthenticationService, private socket: GameService, private router: Router) {
     this.showLoginModal = false;
     this.remainingSeconds = 5;
-    // this.countdownInterval = setInterval
   }
   ngOnInit(): void {
   }
@@ -28,36 +27,7 @@ export class HomeComponent implements OnInit{
       this.startRedirectionCountdown();
       return;
     }
-    const token = localStorage.getItem('jwt');
-    const payload: string | undefined = token?.split('.')[1];
-    const player = payload ? atob(payload) : null ;
-    if(player) {
-      console.log(player);
-      const playerName = JSON.parse(player).username;
-      this.socket.findRoomToJoin(response => {
-        console.log("Checking for available games...");
-        if(response.roomCode) {
-          console.log("An existing room found...");
-          this.socket.joinRoom(playerName,response.roomCode, joinResponse => {
-            console.log("Join response: "+joinResponse);
-            if(joinResponse.roomCode) {
-              this.socket.playerType = "second";
-              this.router.navigate(['game', joinResponse.roomCode]);
-            }
-          });
-        }
-        else {
-          console.log("No room found.");
-          console.log("Creating a room...");
-          this.socket.createRoom(playerName, createResponse => {
-            if(createResponse.roomCode) {
-              this.socket.playerType = "first"
-              this.router.navigate(['game',createResponse.roomCode]);
-            }
-          });
-        }
-      });
-    }
+    this.router.navigate(['matchup'])
   }
   navigateToLogin(): void {
     this.showLoginModal = true;

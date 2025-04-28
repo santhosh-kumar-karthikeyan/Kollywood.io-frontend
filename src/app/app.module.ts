@@ -7,13 +7,14 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { NavListItemsComponent } from './nav-list-items/nav-list-items.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent } from './login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JWTInterceptorService } from './services/Interceptors/jwtinterceptor.service';
 import { MatchupComponent } from './matchup/matchup.component';
+import { GameComponent } from './game/game.component';
 
 @NgModule({
   declarations: [
@@ -24,12 +25,14 @@ import { MatchupComponent } from './matchup/matchup.component';
     LoginComponent,
     HomeComponent,
     SignupComponent,
-    MatchupComponent
+    MatchupComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),

@@ -1,0 +1,80 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+  <div class="bg-gray-800 p-8 rounded-xl shadow-xl text-center w-96">
+    <!-- Game Title -->
+    <h1 class="text-3xl font-extrabold text-yellow-400 tracking-wide">Kollywood.io</h1>
+    <p class="mt-2 text-lg text-gray-300">Guess the details below!</p>
+
+    <!-- Remaining Chances -->
+    <div class="mt-4 flex justify-between text-sm text-gray-400">
+      <p>My Chances: <span class="text-yellow-400">{{ myRemaining }}</span></p>
+      <p>Opponent Chances: <span class="text-yellow-400">{{ oppRemaining }}</span></p>
+    </div>
+
+    <!-- 2x2 Matrix for Tiles -->
+    <div class="grid grid-cols-2 gap-4 mt-6">
+      <!-- Movie Name Tile -->
+      <div
+        class="p-4 rounded-md cursor-pointer text-center"
+        [class.bg-yellow-400]="activeField === 'movieName'"
+        [class.text-black]="activeField === 'movieName'"
+        [class.bg-gray-700]="activeField !== 'movieName'"
+        (click)="setActiveField('movieName', 0)"
+      >
+        <p class="text-sm text-gray-400">Movie Name</p>
+        <p class="text-2xl font-bold">{{ movieNameInitial }}</p>
+      </div>
+
+      <!-- Hero Name Tile -->
+      <div
+        class="p-4 rounded-md cursor-pointer text-center"
+        [class.bg-yellow-400]="activeField === 'heroName'"
+        [class.text-black]="activeField === 'heroName'"
+        [class.bg-gray-700]="activeField !== 'heroName'"
+        (click)="setActiveField('heroName', 1)"
+      >
+        <p class="text-sm text-gray-400">Hero Name</p>
+        <p class="text-2xl font-bold">{{ heroNameInitial }}</p>
+      </div>
+
+      <!-- Heroine Name Tile -->
+      <div
+        class="p-4 rounded-md cursor-pointer text-center"
+        [class.bg-yellow-400]="activeField === 'heroineName'"
+        [class.text-black]="activeField === 'heroineName'"
+        [class.bg-gray-700]="activeField !== 'heroineName'"
+        (click)="setActiveField('heroineName', 2)"
+      >
+        <p class="text-sm text-gray-400">Heroine Name</p>
+        <p class="text-2xl font-bold">{{ heroineNameInitial }}</p>
+      </div>
+
+      <!-- Song Name Tile -->
+      <div
+        class="p-4 rounded-md cursor-pointer text-center"
+        [class.bg-yellow-400]="activeField === 'songName'"
+        [class.text-black]="activeField === 'songName'"
+        [class.bg-gray-700]="activeField !== 'songName'"
+        (click)="setActiveField('songName', 3)"
+      >
+        <p class="text-sm text-gray-400">Song Name</p>
+        <p class="text-2xl font-bold">{{ songNameInitial }}</p>
+      </div>
+    </div>
+
+    <!-- Input Field and Submit Button -->
+    <div class="mt-6">
+      <input
+        type="text"
+        [(ngModel)]="inputValue"
+        class="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+        placeholder="Enter your guess"
+      />
+      <button
+        (click)="submitGuess()"
+        class="mt-4 w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-500 transition"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</div>
