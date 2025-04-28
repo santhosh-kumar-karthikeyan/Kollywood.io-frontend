@@ -27,36 +27,51 @@ export class MatchupComponent implements OnInit, CanComponentDeactivate{
       event.preventDefault();
     }
   }
+  getRoomCode() {
+    return this.socket.roomCode;
+  }
   private startMatchmaking(): void {
     const playerName = this.auth.getUsername();
     if(playerName) {
       console.log(playerName);
-      this.socket.findRoomToJoin(response => {
-        console.log("Checking for available games...");
-        if(response.roomCode) {
-          console.log("An existing room found...");
-          this.socket.joinRoom(playerName,response.roomCode, joinResponse => {
-            console.log("Join response: "+joinResponse.success + joinResponse.roomCode);
-            if(joinResponse.success) {
-              this.socket.playerType = "second";
-              this.socket.roomCode = joinResponse.roomCode;
-              this.router.navigate(["matchup"]);
-            }
-          });
-        }
-        else {
-          console.log("No room found.");
-          console.log("Creating a room...");
-          this.socket.createRoom(playerName, createResponse => {
-            if(createResponse.roomCode) {
-              this.socket.playerType = "first";
-              this.socket.roomCode = createResponse.roomCode;
-              console.log("Navigating to the newly created room..."+createResponse.roomCode);
-              this.router.navigate(['matchup']);
-            }
-          });
-        }
-      });
+      console.log("Room code: " + this.socket.roomCode);
+      if(this.socket.roomCode) {
+        this.socket.joinRoom(playerName,this.socket.roomCode, joinResponse => {
+          if(joinResponse.success) {
+            this.socket.playerType = 'second';
+            this.router.navigate(["matchup"]);
+          }
+        })
+      }
+      else {
+        console.log("Entered else");
+        this.socket.findRoomToJoin(response => {
+          console.log("Checking for available games...");
+          if(response.roomCode) {
+            console.log("An existing room found...");
+            this.socket.joinRoom(playerName,response.roomCode, joinResponse => {
+              console.log("Join response: "+joinResponse.success + joinResponse.roomCode);
+              if(joinResponse.success) {
+                this.socket.playerType = "second";
+                this.socket.roomCode = joinResponse.roomCode;
+                this.router.navigate(["matchup"]);
+              }
+            });
+          }
+          else {
+            console.log("No room found.");
+            console.log("Creating a room...");
+            this.socket.createRoom(playerName, createResponse => {
+              if(createResponse.roomCode) {
+                this.socket.playerType = "first";
+                this.socket.roomCode = createResponse.roomCode;
+                console.log("Navigating to the newly created room..."+createResponse.roomCode);
+                this.router.navigate(['matchup']);
+              }
+            });
+          }
+        });
+      }
     }
   }
   private listenForStartGame(): void {

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameService } from '../services/GameSockets/socket.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/Authentication/authentication.service';
-import { PlayerService } from '../services/Player/player.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-home',
   standalone: false,
@@ -13,9 +13,13 @@ export class HomeComponent implements OnInit{
   showLoginModal: boolean;
   remainingSeconds: number;
   countdownInterval: any;
-  constructor(private auth: AuthenticationService, private socket: GameService, private router: Router) {
+  roomCodeForm: FormGroup;
+  constructor(private auth: AuthenticationService, private socket: GameService, private router: Router, private fb: FormBuilder) {
     this.showLoginModal = false;
     this.remainingSeconds = 5;
+    this.roomCodeForm = this.fb.group({
+      roomCode: ['', Validators.required]
+    });
   }
   ngOnInit(): void {
   }
@@ -28,6 +32,14 @@ export class HomeComponent implements OnInit{
       return;
     }
     this.router.navigate(['matchup'])
+  }
+  joinRoom(): void {
+    if(this.roomCodeForm.valid) {
+      const roomCode = this.roomCodeForm.get('roomCode')?.value;
+      console.log("Room code: " + roomCode);
+      this.socket.roomCode = roomCode;
+      this.router.navigate(['matchup']);
+    }
   }
   navigateToLogin(): void {
     this.showLoginModal = true;
