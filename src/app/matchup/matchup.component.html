@@ -9,6 +9,8 @@
         <div class="w-8 h-8 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
   
+      <!-- RoomCode -->
+       <p *ngIf ="this.getRoomCode()" class = "mt-4 text-gray-100">Current room code: {{this.getRoomCode()}}</p>
       <!-- Waiting status -->
       <p id="status" class="mt-4 text-gray-400">{{ statusMessage }}</p>
   

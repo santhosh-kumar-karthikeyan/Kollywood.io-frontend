@@ -15,7 +15,8 @@ export class GameService {
   private _opponentName: string;
   private _roomCode: string;
   constructor(private http: HttpClient) {
-    this.backendUrl = "https://backend-kollywood-io.onrender.com";
+    // this.backendUrl = "https://backend-kollywood-io.onrender.com/";
+    this.backendUrl = "http://localhost:8080";
     this.socket = null;
     this._playerType = "first";
     this._playerName = "";
@@ -52,6 +53,9 @@ export class GameService {
         this.isGameStarted = true;
       });
     });
+  }
+  getRoomCode() {
+    return this.roomCode;
   }
   //  getGuess(callback: (response: any) => void) {
   //   return this.http
