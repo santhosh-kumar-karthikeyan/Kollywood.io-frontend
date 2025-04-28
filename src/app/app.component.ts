@@ -9,14 +9,14 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'Kollywood.io';
   navItems = [
-    { text: 'Leaderboard', link: 'http://localhost:5000/leaderboard' },
-    { text: 'How To Play?', link: 'http://localhost:5000/rules' },
-    { text: 'Contact', link: 'http://localhost:5000/tac' }
+    { text: 'Leaderboard', link: '#' },
+    { text: 'How To Play?', link: '#' },
+    { text: 'Contact', link: '#' }
   ];
 
   profileOptions = [
-    { text: 'Login', link: 'login.html' },
-    { text: 'Sign Up', link: 'http://localhost:5000/signUp' },
+    { text: 'Login', link: '#' },
+    { text: 'Sign Up', link: '#' },
     { text: 'Logout', link: '#' }
   ];
 }

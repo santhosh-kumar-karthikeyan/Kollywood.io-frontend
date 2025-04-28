@@ -15,7 +15,7 @@ export class GameService {
   private _opponentName: string;
   private _roomCode: string;
   constructor(private http: HttpClient) {
-    this.backendUrl = "http://localhost:8080";
+    this.backendUrl = "https://backend-kollywood-io.onrender.com";
     this.socket = null;
     this._playerType = "first";
     this._playerName = "";
