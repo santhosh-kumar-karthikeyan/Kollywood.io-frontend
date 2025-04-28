@@ -37,7 +37,14 @@ export class AuthenticationService {
   getToken(): string | null {
     return localStorage.getItem('jwt');
   }
-
+  getUsername(): string  {
+    const token = localStorage.getItem('jwt');
+    if(!token)
+      return "";
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const username = payload.username;
+    return username;
+  }
   isLoggedIn(): boolean {
     console.log(this.getToken());
     const token = this.getToken();
