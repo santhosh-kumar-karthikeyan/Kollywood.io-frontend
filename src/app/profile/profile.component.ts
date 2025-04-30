@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
-  @Input() profileOptions: {text: string, link: string}[] = [];
+
 }

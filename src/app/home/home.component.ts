@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit{
   remainingSeconds: number;
   countdownInterval: any;
   roomCodeForm: FormGroup;
-  constructor(private auth: AuthenticationService, private socket: GameService, private router: Router, private fb: FormBuilder) {
+  constructor(protected auth: AuthenticationService, private socket: GameService, private router: Router, private fb: FormBuilder) {
     this.showLoginModal = false;
     this.remainingSeconds = 5;
     this.roomCodeForm = this.fb.group({
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit{
     if(!this.auth.isLoggedIn()) {
       console.log("Not logged in");
       this.showLoginModal = true;
-      this.startRedirectionCountdown();
+      this.startRedirectionCountdown("matchup");
       return;
     }
     this.router.navigate(['matchup'])
@@ -41,19 +41,28 @@ export class HomeComponent implements OnInit{
       this.router.navigate(['matchup']);
     }
   }
-  navigateToLogin(): void {
+  navigateToLogin(dest: string): void {
     this.showLoginModal = true;
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'], {queryParams: {redirectTo: dest}});
   }
-  startRedirectionCountdown(): void {
+  navigateToSignup(): void {
+    this.router.navigate(['/signup']);
+  }
+  startRedirectionCountdown(dest: string): void {
     this.remainingSeconds = 5;
     this.countdownInterval = setInterval(() => {
       this.remainingSeconds--;
       if(this.remainingSeconds <= 0) {
         clearInterval(this.countdownInterval);
-        this.navigateToLogin();
+        this.navigateToLogin(dest);
       }
     },1000);
+  }
+  signOut(): void {
+    this.auth.logout();
+  }
+  navigateToProfile(): void {
+    this.router.navigate(['/profile/:username']);
   }
   closeModal(): void {
     this.showLoginModal = false;

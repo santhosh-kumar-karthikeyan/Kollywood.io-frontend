@@ -1,63 +1,5 @@
-<div class="flex flex-col items-center justify-center min-h-screen px-4 pt-24">
-  <section class="bg-gray-800 p-8 rounded-xl shadow-lg text-center w-full max-w-lg">
-    <h2 class="text-2xl font-bold text-yellow-400 mb-6">Choose Your Game Mode</h2>
-
-    <!-- Game Modes -->
-    <div class="flex space-x-6 justify-center">
-      <!-- 1v1 Game Mode -->
-      <div class="relative group">
-        <button
-          class="w-full bg-yellow-400 text-black py-3 px-6 rounded-md cursor-pointer hover:bg-yellow-500 transition"
-        >
-          1v1
-        </button>
-        <!-- Play Button (Visible on Hover) -->
-        <button
-          class="absolute top-0 left-0 w-full h-full bg-yellow-500 text-black py-3 px-6 rounded-md opacity-0 group-hover:opacity-100 transition"
-          (click)="startGame()"
-        >
-          Play
-        </button>
-      </div>
-
-      <!-- Player vs Computer (Coming Soon) -->
-      <div class="relative">
-        <button
-          class="w-full bg-gray-600 text-gray-400 py-3 px-6 rounded-md cursor-not-allowed"
-          title="Coming Soon"
-        >
-          Player vs Computer <br />(Coming soon...)
-        </button>
-      </div>
-    </div>
-
-    <!-- Room Code Form -->
-    <div class="mt-8">
-      <h3 class="text-lg font-semibold text-gray-300 mb-4">Join a Room</h3>
-      <form [formGroup]="roomCodeForm" (ngSubmit)="joinRoom()">
-        <div class="flex items-center space-x-4">
-          <input
-            type="text"
-            formControlName="roomCode"
-            class="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            placeholder="Enter Room Code"
-          />
-          <button
-            type="submit"
-            [disabled]="roomCodeForm.invalid"
-            class="bg-yellow-400 text-black py-2 px-4 rounded-md hover:bg-yellow-500 transition"
-          >
-            Join
-          </button>
-        </div>
-        <div *ngIf="roomCodeForm.get('roomCode')?.invalid && roomCodeForm.get('roomCode')?.touched" class="text-red-400 text-sm mt-2">
-          Room code is required.
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <!-- Login Required Modal -->
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+  <!-- Login Modal -->
   <div
     *ngIf="showLoginModal"
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -68,7 +10,7 @@
         You are being redirected to the login page in {{ remainingSeconds }} seconds.
       </p>
       <button
-        (click)="navigateToLogin()"
+        (click)="navigateToLogin('')"
         class="w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-500 transition"
       >
         Go to Login Now
@@ -81,4 +23,50 @@
       </button>
     </div>
   </div>
+
+  <!-- Main Content -->
+  <section class="bg-gray-800 p-8 rounded-xl shadow-lg text-center w-full max-w-4xl mt-12">
+    <h2 class="text-2xl font-bold text-yellow-400 mb-6">Choose Your Game Mode</h2>
+
+    <!-- Game Modes -->
+    <div class="grid grid-cols-3 gap-6">
+      <!-- Random 1v1 -->
+      <div
+        class="p-6 bg-yellow-400 text-black rounded-md cursor-pointer hover:bg-yellow-500 transition"
+        (click)="startGame()"
+      >
+        <h3 class="text-xl font-bold">Random 1v1</h3>
+        <p class="text-sm mt-2">Play against a random opponent.</p>
+      </div>
+
+      <!-- Join a Room -->
+      <div class="p-6 bg-gray-700 text-white rounded-md">
+        <h3 class="text-xl font-bold">Join a Room</h3>
+        <form [formGroup]="roomCodeForm" (ngSubmit)="joinRoom()" class="mt-4">
+          <input
+            type="text"
+            formControlName="roomCode"
+            class="w-full px-4 py-2 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            placeholder="Enter Room Code"
+          />
+          <button
+            type="submit"
+            [disabled]="roomCodeForm.invalid"
+            class="mt-4 w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-500 transition"
+          >
+            Join Room
+          </button>
+        </form>
+      </div>
+
+      <!-- Coming Soon -->
+      <div
+        class="p-6 bg-gray-600 text-gray-400 rounded-md cursor-not-allowed"
+        title="Coming Soon"
+      >
+        <h3 class="text-xl font-bold">Coming Soon</h3>
+        <p class="text-sm mt-2">New game modes are on the way!</p>
+      </div>
+    </div>
+  </section>
 </div>
