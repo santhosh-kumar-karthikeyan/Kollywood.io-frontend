@@ -1,14 +1,42 @@
 <header class="fixed top-0 left-0 w-full bg-gray-800 shadow-md z-50">
-    <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
-      <!-- Logo -->
-      <h1 class="text-2xl font-extrabold text-yellow-400">
-        <a href="#" aria-label="Kollywood.io Home">{{ logoText }}</a>
-      </h1>
-  
-      <!-- Navigation Links -->
-      <nav-list-items [items]="navItems"></nav-list-items>
-  
-      <!-- Profile Section -->
-      <profile [profileOptions]="profileOptions"></profile>
-    </nav>
-  </header>
+  <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+    <!-- Logo -->
+    <h1 class="text-2xl font-extrabold text-yellow-400">
+      <a href="/" aria-label="Kollywood.io Home">Kollywood.io</a>
+    </h1>
+
+    <!-- Navigation Links -->
+    <div>
+      <ng-container *ngIf="auth.isLoggedIn(); else guestOptions">
+        <!-- Logged In Options -->
+        <button
+          class="bg-yellow-400 text-black py-2 px-4 rounded-md hover:bg-yellow-500 transition mr-4"
+          (click)="navigateTo('profile')"
+        >
+          Profile
+        </button>
+        <button
+          class="bg-gray-600 text-gray-300 py-2 px-4 rounded-md hover:bg-gray-700 transition"
+          (click)="navigateTo('signout')"
+        >
+          Sign Out
+        </button>
+      </ng-container>
+      <ng-template #guestOptions>
+        <!-- Guest Options -->
+        <button
+          class="bg-yellow-400 text-black py-2 px-4 rounded-md hover:bg-yellow-500 transition mr-4"
+          (click)="navigateTo('login')"
+        >
+          Login
+        </button>
+        <button
+          class="bg-gray-600 text-gray-300 py-2 px-4 rounded-md hover:bg-gray-700 transition"
+          (click)="navigateTo('signup')"
+        >
+          Sign Up
+        </button>
+      </ng-template>
+    </div>
+  </nav>
+</header>
