@@ -15,6 +15,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JWTInterceptorService } from './services/Interceptors/jwtinterceptor.service';
 import { MatchupComponent } from './matchup/matchup.component';
 import { GameComponent } from './game/game.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { GameComponent } from './game/game.component';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatTooltipModule
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),

@@ -1,57 +1,100 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { GameService } from '../services/GameSockets/socket.service';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { CanComponentDeactivate } from '../guards/can-deactivate.guard';
+import { Subscription } from 'rxjs';
+import { GameService } from '../services/GameSockets/socket.service';
 import { AuthenticationService } from '../services/Authentication/authentication.service';
+
+
 
 @Component({
   selector: 'app-game',
   standalone: false,
   templateUrl: './game.component.html',
-  styleUrl: './game.component.css'
+  styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit,OnDestroy,CanComponentDeactivate {
+export class GameComponent implements OnInit, OnDestroy {
   roomCode: string | null = null;
-  movieNameInitial: string = '';
-  heroNameInitial: string = '';
-  heroineNameInitial: string = '';
-  songNameInitial: string = '';
-  activeField: string = 'movieName'; // Default active field
-  activeIndex: number = 0; // Index of the active field
-  inputValue: string = ''; // Value entered in the input field
-  myRemaining: number = 0;
-  oppRemaining: number = 0;
+  activeField: string = 'movieName';
+  activeIndex: number = 0;
+  inputValue: string = '';
+  myRemaining: number = 8;
+  oppRemaining: number = 8;
+  myFound: number = 0;
+  oppFound: number = 0;
+  gameStatus: 'win' | 'lose' | 'tie' | null = null; // Game status
+  showModal: boolean = false; // Controls the visibility of the modal
+  modalMessage: string = ''; // Message to display in the modal
+  isGuessWrong: boolean = false; // Indicates if the last guess was wrong
+  clues: { field: string; value: string; found: boolean }[] = [
+    { field: 'movieName', value: '', found: false },
+    { field: 'heroName', value: '', found: false },
+    { field: 'heroineName', value: '', found: false },
+    { field: 'songName', value: '', found: false }
+  ];
+  private subscriptions: Subscription = new Subscription();
 
-  constructor(private route: ActivatedRoute, private gameService: GameService,private auth: AuthenticationService) {}
-  ngOnDestroy(): void {
-    
-  }
+  constructor(
+    private route: ActivatedRoute,
+    private gameService: GameService,
+    private auth: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
-    console.log("RoomCode: "+this.roomCode);
     if (this.roomCode) {
-      console.log("Going to fetch the movie");
       this.fetchMovieClue(this.roomCode, this.auth.getUsername());
     }
+
+    const gameStatusSub = this.gameService.listenToGameStatus().subscribe((gameStatus) => {
+      const playerStatus = gameStatus[this.auth.getUsername()];
+      const opponentStatus = gameStatus[this.getOpponentName(gameStatus)];
+
+      this.myRemaining = playerStatus.remainingGuesses;
+      this.oppRemaining = opponentStatus.remainingGuesses;
+      this.myFound = playerStatus.found;
+      this.oppFound = opponentStatus.found;
+
+      if (playerStatus.won) {
+        this.gameStatus = 'win';
+        this.showModal = true;
+        this.modalMessage = '🎉 You Won! 🎉';
+      } else if (playerStatus.lost) {
+        this.gameStatus = 'lose';
+        this.showModal = true;
+        this.modalMessage = '😢 You Lost! 😢';
+      } else if (this.myRemaining === 0 && this.oppRemaining === 0) {
+        this.gameStatus = 'tie';
+        this.showModal = true;
+        this.modalMessage = '🤝 It\'s a Tie! 🤝';
+      }
+    });
+
+    this.subscriptions.add(gameStatusSub);
   }
 
-  fetchMovieClue(roomCode: string,playerName: string): void {
-    this.gameService.getMovieClue(roomCode,playerName).subscribe((clue) => {
-      console.log("Clue" + clue);
-      this.movieNameInitial = clue[0];
-      this.heroNameInitial = clue[1];
-      this.heroineNameInitial = clue[2];
-      this.songNameInitial = clue[3];
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  fetchMovieClue(roomCode: string, playerName: string): void {
+    this.gameService.getMovieClue(roomCode, playerName).subscribe({
+      next: (clue) => {
+        this.clues[0].value = clue[0];
+        this.clues[1].value = clue[1];
+        this.clues[2].value = clue[2];
+        this.clues[3].value = clue[3];
+      },
+      error: (err) => {
+        console.error('Error fetching movie clues:', err);
+      }
     });
   }
 
   setActiveField(field: string, index: number): void {
     this.activeField = field;
     this.activeIndex = index;
-    this.inputValue = ''; 
+    this.inputValue = '';
+    this.isGuessWrong = false; // Reset wrong guess indicator
   }
 
   submitGuess(): void {
@@ -62,33 +105,33 @@ export class GameComponent implements OnInit,OnDestroy,CanComponentDeactivate {
 
     this.gameService.submitGuess(this.roomCode!, {
       index: this.activeIndex,
-      value: this.inputValue,
-      playerName: this.gameService.playerName
-    }).subscribe(
-      (response) => {
-        console.log('Guess response:', response);
-        this.myRemaining = response.myRemaining;
-        this.oppRemaining = response.oppRemaining;
-
-        if (response.won) {
-          alert('You won!');
-        } else if (response.lost) {
-          alert('You lost!');
-        } else if (response.correctness) {
-          alert('Correct guess!');
+      value: this.inputValue
+    }).subscribe({
+      next: (response) => {
+        if (response.correctness) {
+          this.clues[this.activeIndex].found = true;
+          this.isGuessWrong = false; // Correct guess
         } else {
-          alert('Incorrect guess!');
+          this.isGuessWrong = true; // Wrong guess
         }
+      },
+      error: (err) => {
+        console.error('Error submitting guess:', err);
       }
-    );
+    });
   }
-  canDeactivate() : boolean | Promise<boolean> | Observable<boolean> {
-      const confirmation = window.confirm("You are in the middle of matchmaking. Do you really want to quit now?");
-      if(confirmation) {
-        this.gameService.invalidateRoom(this.gameService.roomCode, this.gameService.playerName).subscribe(response => {
-          console.log(`${response.oppName} won`);
-        });
-      }
-      return confirmation;
+
+  getRemainingGuessesDisplay(remaining: number): string[] {
+    const word = 'KOLLYWOOD';
+    return word.split('');
+  }
+
+  getOpponentName(gameStatus: any): string {
+    const usernames = Object.keys(gameStatus);
+    return usernames.find((name) => name !== this.auth.getUsername()) || 'Opponent';
+  }
+
+  closeModal(): void {
+    this.showModal = false;
   }
 }

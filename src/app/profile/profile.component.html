@@ -1,0 +1,116 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+  <!-- Profile Section -->
+  <section class="bg-gray-800 p-8 rounded-xl shadow-lg text-center w-full max-w-4xl">
+    <h2 class="text-2xl font-bold text-yellow-400 mb-6">User Profile</h2>
+
+    <!-- User Information Table -->
+    <table class="table-auto w-full text-left text-gray-300">
+      <tbody>
+        <tr>
+          <td class="px-4 py-2 font-semibold">Name:</td>
+          <td class="px-4 py-2">{{ username }}</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-2 font-semibold">Email:</td>
+          <td class="px-4 py-2">{{ email }}</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-2 font-semibold">Joined:</td>
+          <td class="px-4 py-2">
+            <span
+              class="tooltip"
+              [matTooltip]="joinedDate | date: 'dd-MM-yyyy'"
+              matTooltipPosition="above"
+            >
+              {{ joined }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Change Password Button -->
+    <button
+      class="bg-yellow-400 text-black py-2 px-6 rounded-md hover:bg-yellow-500 transition mt-6"
+      (click)="openChangePasswordModal()"
+    >
+      Change Password
+    </button>
+  </section>
+
+  <!-- Match History Section -->
+  <section class="bg-gray-800 p-8 rounded-xl shadow-lg text-center w-full max-w-4xl mt-12">
+    <h2 class="text-2xl font-bold text-yellow-400 mb-6">Match History</h2>
+
+    <!-- Match History Table -->
+    <div class="overflow-x-auto">
+      <table class="table-auto w-full text-left text-gray-300">
+        <thead>
+          <tr class="bg-gray-700">
+            <th class="px-4 py-2">Opponent Name</th>
+            <th class="px-4 py-2">Your Score</th>
+            <th class="px-4 py-2">Opponent Score</th>
+            <th class="px-4 py-2">Winner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let match of history" class="border-b border-gray-700">
+            <td class="px-4 py-2">{{ match.opponent }}</td>
+            <td class="px-4 py-2">{{ match.playerScore }}</td>
+            <td class="px-4 py-2">{{ match.opponentScore }}</td>
+            <td class="px-4 py-2">{{ match.winner }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Change Password Modal -->
+  <div
+    *ngIf="showChangePasswordModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  >
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center w-80">
+      <h2 class="text-xl font-bold text-yellow-400 mb-4">Change Password</h2>
+      <form (ngSubmit)="changePassword()">
+        <input
+          type="password"
+          [(ngModel)]="oldPassword"
+          name="oldPassword"
+          placeholder="Old Password"
+          class="w-full px-4 py-2 mb-4 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          required
+        />
+        <input
+          type="password"
+          [(ngModel)]="newPassword"
+          name="newPassword"
+          placeholder="New Password"
+          class="w-full px-4 py-2 mb-4 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          required
+        />
+        <input
+          type="password"
+          [(ngModel)]="confirmNewPassword"
+          name="confirmNewPassword"
+          placeholder="Confirm New Password"
+          class="w-full px-4 py-2 mb-4 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          required
+        />
+        <button
+          type="submit"
+          class="w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-500 transition"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          class="w-full bg-gray-600 text-gray-300 py-2 rounded-md mt-2 hover:bg-gray-700 transition"
+          (click)="closeChangePasswordModal()"
+        >
+          Cancel
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
