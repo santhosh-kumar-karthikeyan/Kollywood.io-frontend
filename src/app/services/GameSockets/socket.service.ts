@@ -15,8 +15,8 @@ export class GameService {
   private _opponentName: string;
   private _roomCode: string;
   constructor(private http: HttpClient) {
-    this.backendUrl = "https://backend-kollywood-io.onrender.com";
-    // this.backendUrl = "http://localhost:8080";
+    // this.backendUrl = "https://backend-kollywood-io.onrender.com";
+    this.backendUrl = "http://localhost:8080";
     this.socket = null;
     this._playerType = "first";
     this._playerName = "";
@@ -25,7 +25,12 @@ export class GameService {
    }
    private initializeSocket(): void {
     if(!this.socket) {
-      this.socket = io(this.backendUrl);
+      this.socket = io(this.backendUrl, {
+        auth: {
+          token: localStorage.getItem('jwt')
+        }
+      });
+      console.log("Auth sent: ",localStorage.getItem('jwt'));
       console.log("New socket created: " + this.socket);
     }
    }
@@ -117,11 +122,19 @@ export class GameService {
     });
   }
 
-  submitGuess(roomCode: string, guess: { index: number; value: string; playerName: string }): Observable<any> {
+  submitGuess(roomCode: string, guess: { index: number; value: string}): Observable<any> {
     return new Observable((observer) => {
       this.socket?.emit('submitGuess', { roomCode, guess }, (response: any) => {
         observer.next(response);
         observer.complete();
+      });
+    });
+  }
+  listenToGameStatus(): Observable<any> {
+    return new Observable((observer) => {
+      this.socket?.on('gameStatus', (data: any) => {
+        observer.next(data);
+        console.log(data);
       });
     });
   }

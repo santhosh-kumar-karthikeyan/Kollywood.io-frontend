@@ -6,6 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { MatchupComponent } from './matchup/matchup.component';
 import { canDeactivateGuard } from './guards/can-deactivate.guard';
 import { GameComponent } from './game/game.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: "signup" , component : SignupComponent},
   { path: "matchup", component: MatchupComponent},
   { path: "game/:roomCode", component: GameComponent, canDeactivate: [canDeactivateGuard]},
+  { path: "profile/:username", component: ProfileComponent}
 ];
 
 @NgModule({
