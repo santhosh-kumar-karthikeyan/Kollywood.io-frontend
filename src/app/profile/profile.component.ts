@@ -20,7 +20,8 @@ export class ProfileComponent implements OnInit {
   email: string = '';
   joined: string = '';
   joinedDate: Date = new Date();
-  backendUrl : string = 'http://localhost:8080';
+  backendUrl: string = 'https://backend-kollywood-io.onrender.com';
+  // backendUrl : string = 'http://localhost:8080';
   showChangePasswordModal: boolean = false;
   oldPassword: string = '';
   newPassword: string = '';
