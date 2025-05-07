@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, CanDeactivate } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { GameService } from '../services/GameSockets/socket.service';
 import { AuthenticationService } from '../services/Authentication/authentication.service';
-
-
+import { CanComponentDeactivate } from '../guards/can-deactivate.guard';
 
 @Component({
   selector: 'app-game',
@@ -12,25 +11,26 @@ import { AuthenticationService } from '../services/Authentication/authentication
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class GameComponent implements OnInit, OnDestroy,CanComponentDeactivate {
   roomCode: string | null = null;
   activeField: string = 'movieName';
   activeIndex: number = 0;
   inputValue: string = '';
-  myRemaining: number = 8;
-  oppRemaining: number = 8;
+  myRemaining: number = 9;
+  oppRemaining: number = 9;
   myFound: number = 0;
   oppFound: number = 0;
-  gameStatus: 'win' | 'lose' | 'tie' | null = null; // Game status
-  showModal: boolean = false; // Controls the visibility of the modal
-  modalMessage: string = ''; // Message to display in the modal
-  isGuessWrong: boolean = false; // Indicates if the last guess was wrong
+  gameStatus: 'win' | 'lose' | 'tie' | null = null;
+  showModal: boolean = false;
+  modalMessage: string = '';
+  isGuessWrong: boolean = false;
   clues: { field: string; value: string; found: boolean }[] = [
     { field: 'movieName', value: '', found: false },
     { field: 'heroName', value: '', found: false },
     { field: 'heroineName', value: '', found: false },
     { field: 'songName', value: '', found: false }
   ];
+  guesses: string[] = ['', '', '', '']; // Store player's guesses for each clue
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -38,6 +38,9 @@ export class GameComponent implements OnInit, OnDestroy {
     private gameService: GameService,
     private auth: AuthenticationService
   ) {}
+  canDeactivate() : boolean | Promise<boolean> | Observable<boolean> {
+    return window.confirm("You are in the middle of matchmaking. Do you really want to quit now?");
+  }
 
   ngOnInit(): void {
     this.roomCode = this.route.snapshot.paramMap.get('roomCode');
@@ -93,7 +96,7 @@ export class GameComponent implements OnInit, OnDestroy {
   setActiveField(field: string, index: number): void {
     this.activeField = field;
     this.activeIndex = index;
-    this.inputValue = '';
+    this.inputValue = this.clues[index].found ? this.guesses[index] : ''; // Show stored guess if found
     this.isGuessWrong = false; // Reset wrong guess indicator
   }
 
@@ -103,6 +106,7 @@ export class GameComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.guesses[this.activeIndex] = this.inputValue; // Store the guess
     this.gameService.submitGuess(this.roomCode!, {
       index: this.activeIndex,
       value: this.inputValue
