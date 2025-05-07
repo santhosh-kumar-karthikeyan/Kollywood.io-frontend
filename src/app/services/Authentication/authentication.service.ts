@@ -6,8 +6,8 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private baseUrl: string = "https://backend-kollywood-io.onrender.com/";
-  // private baseUrl: string = "http://localhost:8080/";
+  // private baseUrl: string = "https://backend-kollywood-io.onrender.com/";
+  private baseUrl: string = "http://localhost:8080/";
   private authUrl: string = this.baseUrl + "auth/";
   private loginUrl: string = this.authUrl + "login/";
   private signUpUrl: string = this.authUrl + "signup/"
@@ -60,5 +60,13 @@ export class AuthenticationService {
     const payload = JSON.parse(atob(token.split('.')[1]));
     const currentTime = Math.floor(Date.now() / 1000);
     return payload.exp > currentTime;
+  }
+  getRole(): string {
+    const token = this.getToken();
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.role || '';
+    }
+    return '';
   }
 }

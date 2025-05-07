@@ -16,6 +16,7 @@ import { JWTInterceptorService } from './services/Interceptors/jwtinterceptor.se
 import { MatchupComponent } from './matchup/matchup.component';
 import { GameComponent } from './game/game.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     HomeComponent,
     SignupComponent,
     MatchupComponent,
-    GameComponent
+    GameComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
