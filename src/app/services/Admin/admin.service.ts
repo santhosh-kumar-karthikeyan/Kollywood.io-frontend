@@ -7,7 +7,7 @@ import { AuthenticationService } from '../Authentication/authentication.service'
   providedIn: 'root'
 })
 export class AdminService {
-  private apiUrl: string = "https://backend-kollywood-io.onrender.com/";
+  private apiUrl: string = "https://backend-kollywood-io.onrender.com/user/getUsers";
   // private apiUrl = 'http://localhost:8080/user/getUsers'; // Adjust to your backend URL
 
   constructor(
