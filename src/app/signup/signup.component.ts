@@ -16,7 +16,7 @@ export class SignupComponent {
   errorMessage: string; 
   usernameStatus: string = "";
   // backendUrl: string = "http://localhost:8080/";
-  backendUrl: string = "https://backend-kollywood-io.onrender.com/";
+  backendUrl: string = "https://backend-kollywood-io.onrender.com";
   constructor(private fb: FormBuilder,private auth: AuthenticationService,private router: Router,private http: HttpClient) {
       this.errorMessage = '';
       this.signupForm = this.fb.group({
