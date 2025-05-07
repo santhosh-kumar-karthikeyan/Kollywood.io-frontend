@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 })
 export class PlayerService {
   playerType: string | null = null;
-  // backendUrl: string = 'https://backend-kollywood-io.onrender.com';
-  backendUrl: string = 'http://localhost:8080';
+  backendUrl: string = 'https://backend-kollywood-io.onrender.com';
+  // backendUrl: string = 'http://localhost:8080';
   constructor(private http: HttpClient, private auth: AuthenticationService) { }
   getUserDetails(username: string):Observable<any> {
     return this.http.get<{_id: String, username: String, email: String, role: String, totalScore: Number, createdAt: Date, updatedAt: Date, __v: Number}>(`${this.backendUrl}/user/getUser?username=${username}`);

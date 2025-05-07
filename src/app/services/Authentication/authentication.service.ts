@@ -11,7 +11,8 @@ export class AuthenticationService {
   private authUrl: string = this.baseUrl + "auth/";
   private loginUrl: string = this.authUrl + "login/";
   private signUpUrl: string = this.authUrl + "signup/"
-
+  private checkUsernameUrl: string = this.authUrl + "/checkUsername";
+  public userNameValidity: boolean = false;
   constructor(private http: HttpClient) { }
 
   login(credentials : { username: string, password: string}) {
@@ -28,6 +29,14 @@ export class AuthenticationService {
         localStorage.setItem('jwt', response.token);
       })
     );
+  }
+  checkUsername(username: string) : Observable<any> {
+    this.checkUsernameUrl += `?username=${username}`;
+    return this.http.get<{exists: boolean, message: string}>(this.checkUsernameUrl).pipe(
+      tap((response) => {
+        this.userNameValidity = !response.exists;
+      })
+    )
   }
 
   logout(): void {
