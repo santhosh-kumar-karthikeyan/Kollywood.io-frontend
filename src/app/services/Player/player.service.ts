@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { GameService } from '../GameSockets/socket.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from '../Authentication/authentication.service';
 import { Observable } from 'rxjs';
@@ -7,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class PlayerService {
+export class PlayerService {  
   playerType: string | null = null;
   backendUrl: string = 'https://backend-kollywood-io.onrender.com';
   // backendUrl: string = 'http://localhost:8080';
